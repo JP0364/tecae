@@ -156,7 +156,7 @@ disp('AF6 - Problem 2')
 disp('Results:');
 if length(theta) <= 6
     disp('Display results')
-    % Code removed for shorter code
+    % Section removed for shorter code
 else
     disp('Results plotted');
 
