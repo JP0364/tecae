@@ -212,6 +212,7 @@ thetaC = -45; % Orientation angle -45 (°)
 theta = [thetaA, thetaB, thetaC]; % Orientation angles (°)
 % theta = -180:.01:180;
 
+% Material characteristics
 E1 = 50.0E09;  % Longitudinal modulus E1 (Pa)
 E2 = 15.2E09;  % Transverse modulus E2 (Pa)
 E3 = E2;       % Transverse modulus E3 (Pa)
@@ -260,21 +261,21 @@ for i = 1:length(theta)
     fprintf('\n');
 end
 
-% Plot changes in direction in function of angle
-figure
-subplot(2, 1, 1)
-plot(theta, deltaX(1, :), 'r', 'LineWidth', 2);
-hold on
-plot(theta, deltaY(2, :), 'b', 'LineWidth', 2);
-xlabel('Orientation Angle (°)');
-ylabel('Change in Dimension (mm)');
-title('Change in Dimension vs. Orientation Angle');
-legend('Change in X Dimension', 'Change in Y Dimension');
-grid on
+% % Plot changes in direction in function of angle
+% figure
+% subplot(2, 1, 1)
+% plot(theta, deltaX(1, :), 'r', 'LineWidth', 2);
+% hold on
+% plot(theta, deltaY(2, :), 'b', 'LineWidth', 2);
+% xlabel('Orientation Angle (°)');
+% ylabel('Change in Dimension (mm)');
+% title('Change in Dimension vs. Orientation Angle');
+% legend('Change in X Dimension', 'Change in Y Dimension');
+% grid on
 
-% Plot Gamma XY in function of angle
-subplot(2, 1, 2)
-plot(theta, epsilon(3, :), 'g', 'LineWidth', 2);
-xlabel('Orientation Angle (°)');
-ylabel('Gamma XY');
-title('Gamma XY vs. Orientation Angle');
+% % Plot Gamma XY in function of angle
+% subplot(2, 1, 2)
+% plot(theta, epsilon(3, :), 'g', 'LineWidth', 2);
+% xlabel('Orientation Angle (°)');
+% ylabel('Gamma XY');
+% title('Gamma XY vs. Orientation Angle');
