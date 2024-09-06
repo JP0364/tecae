@@ -50,17 +50,6 @@ G23 = 3.28E09; % Shear modulus G23 (Pa)
 G12 = 4.70E09; % Shear modulus G12 (Pa)
 G13 = G12;     % Shear modulus G13 (Pa)
 
-% % Alternative charachteristics
-% E1 = 155.0E09;  % Longitudinal modulus E1 (Pa)
-% E2 = 12.1E09;  % Transverse modulus E2 (Pa)
-% E3 = E2;       % Transverse modulus E3 (Pa)
-% nu23 = 0.458;  % Poisson's ratio nu23
-% nu12 = 0.248;  % Poisson's ratio nu12
-% nu13 = nu12;   % Poisson's ratio nu13
-% G23 = 3.20E09; % Shear modulus G23 (Pa)
-% G12 = 4.40E09; % Shear modulus G12 (Pa)
-% G13 = G12;     % Shear modulus G13 (Pa)
-
 nu21 = E2 / E1 * nu12; % Poisson's ratio nu21
 
 % Calculate the reduced compliance matrix
@@ -70,7 +59,6 @@ S = [1/E1     -nu12/E1  0; ...
 
 m = cos(theta); % Sine of the orientation angle
 n = sin(theta); % Cosine of the orientation angle
-
 epsilon = zeros(3,length(theta)); % Strain tensor (Pa) 
 
 for i = 1:length(theta)
@@ -119,7 +107,8 @@ end
 % orientation angle theta in the range −pi/2 ≤ θ ≤ pi/2.
 
 % Orientation angle (rad)
-theta = -pi/2:0.01:pi/2;
+theta = -pi/2:0.01:pi/2;         % Define theta by step size
+% theta = linspace(-pi/2,pi/2,19); % Define theta by number of steps
 thetaDeg = rad2deg(theta);
 
 % Calculate the reduced compliance matrix
@@ -131,38 +120,17 @@ m = cos(theta); % Sine of the orientation angle
 n = sin(theta); % Cosine of the orientation angle
 
 epsilon = zeros(3,length(theta)); % Strain tensor (Pa) 
-S0 = zeros(3,3); % Transformed compliance matrix (1/Pa)
-% S1 = zeros(1,length(theta)); % S11
-% S2 = zeros(1,length(theta)); % S12
-% S3 = zeros(1,length(theta)); % S13
-% S4 = zeros(1,length(theta)); % S21
-% S5 = zeros(1,length(theta)); % S22
-% S6 = zeros(1,length(theta)); % S23
-% S7 = zeros(1,length(theta)); % S31
-% S8 = zeros(1,length(theta)); % S32
-% S9 = zeros(1,length(theta)); % S33
+S1 = zeros(3,3); % Transformed compliance matrix (1/Pa)
 
 for i = 1:length(theta)
     T = [m(i).^2,   n(i).^2,  2.*m(i).*n(i); 
           n(i).^2,   m(i).^2,  -2.*m(i).*n(i); 
           -m(i).*n(i),  m(i).*n(i),   m(i).^2-n(i).^2]; % Transformation matrix
 
-    S0 = T \ (S * T); % Transformed compliance matrix (1/Pa)
-    epsiloni = S0*sigma; % Strain tensor (Pa)
+    S1 = T \ (S * T); % Transformed compliance matrix (1/Pa)
+    epsiloni = S1*sigma; % Strain tensor (Pa)
     epsilon(:, i) = epsiloni; % Strain tensor (Pa)
-
-    % % Store the values of the compliance matrix
-    % S1(i) = S0(1, 1) * 1E09; % 
-    % S2(i) = S0(1, 2) * 1E09; % 
-    % S3(i) = S0(1, 3) * 1E09; % 
-    % S4(i) = S0(2, 1) * 1E09; % 
-    % S5(i) = S0(2, 2) * 1E09; % 
-    % S6(i) = S0(2, 3) * 1E09; % 
-    % S7(i) = S0(3, 1) * 1E09; % 
-    % S8(i) = S0(3, 2) * 1E09; %
-    % S9(i) = S0(3, 3) * 1E09; % 
 end
-% SMatrix = [S1; S2; S3; S4; S5; S6; S7; S8; S9];
 
 % Calculate the elastic constants
 Ex = E1 ./ (m.^4 + (E1 ./ G12 - 2.*nu12) .* n.^2.*m.^2 + E1./E2 .* n.^4);                       % Longitudinal modulus Ex (Pa)
@@ -187,21 +155,8 @@ deltaY(2, :) = (epsilon(2, :) * l + l) * 1e03; % Change in the y dimension (mm)
 disp('AF6 - Problem 2')
 disp('Results:');
 if length(theta) <= 6
-    msg = cell(1, length(theta) * 5);
-    msg{1} = sprintf('AF6 - Problem 2\n\n');
-    for i = 1:length(theta)
-        disp(['For the orientation angle of ', num2str(thetaDeg(i), '%.1f'), ' degrees:']);
-        disp(['The change in the x dimension of the element is ', num2str(deltaX(1, i), '%.4f'), ' mm.']);
-        disp(['The change in the y dimension of the element is ', num2str(deltaY(2, i), '%.4f'), ' mm.']);
-        disp(['The Gamma XY for the element is ', num2str(epsilon(3, i), '%.4f')]);
-        fprintf('\n\n');
-    
-        msg{5 * (i - 1) + 2} = sprintf('For the orientation angle of %.1f degrees:', thetaDeg(i));
-        msg{5 * (i - 1) + 3} = sprintf('\nThe change in the x dimension of the element is %.4f mm.', deltaX(1, i));
-        msg{5 * (i - 1) + 4} = sprintf('\nThe change in the y dimension of the element is %.4f mm.', deltaY(2, i));
-        msg{5 * (i - 1) + 5} = sprintf('\nThe Gamma XY for the element is %.4f\n\n', epsilon(3, i));
-    end
-    msgbox(msg, 'AF6 - Problem 1');
+    disp('Display results')
+    % Code removed for shorter code
 else
     disp('Results plotted');
 
@@ -241,26 +196,4 @@ else
         title([elasticConstantsDescription{i}, ' vs. Orientation Angle']);
         grid on
     end
-    % 
-    % figure('Name', 'Compliance Matrix')
-    % set(gcf, 'Position', get(0, 'Screensize'));
-    % for i = 1:9
-    %     subplot(3, 3, i)
-    %     plot(thetaDeg, SMatrix(i, :), 'LineWidth', 2, 'Color', 'b');
-    %     xlabel('Orientation Angle (°)');
-    %     ylabel(['S_', num2str(i)]);
-    %     title(['S_', num2str(i), ' vs. Orientation Angle']);
-    %     grid on
-    % end
-    % 
-    % figure('Name', 'Inverse of Compliance Matrix')
-    % set(gcf, 'Position', get(0, 'Screensize'));
-    % for i = 1:9
-    %     subplot(3, 3, i)
-    %     plot(thetaDeg, 1./SMatrix(i, :), 'LineWidth', 2, 'Color', 'r');
-    %     xlabel('Orientation Angle (°)');
-    %     ylabel(['1/S_', num2str(i)]);
-    %     title(['1/S_', num2str(i), ' vs. Orientation Angle']);
-    %     grid on
-    % end
 end
