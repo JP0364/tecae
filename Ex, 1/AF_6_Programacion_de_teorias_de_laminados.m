@@ -67,8 +67,7 @@ for i = 1:length(theta)
           -m(i).*n(i),  m(i).*n(i),   m(i).^2-n(i).^2]; % Transformation matrix
 
     S1 = T \ (S * T); % Transformed compliance matrix (1/Pa)
-    epsiloni = S1*sigma; % Strain tensor (Pa)
-    epsilon(:, i) = epsiloni; % Strain tensor (Pa)
+    epsilon(:, i) = S1*sigma; % Strain tensor (Pa)
 end
 
 % Calculate the changes in the 50-mm dimensions of the element
@@ -107,8 +106,8 @@ end
 % orientation angle theta in the range −pi/2 ≤ θ ≤ pi/2.
 
 % Orientation angle (rad)
-theta = -pi/2:0.01:pi/2;         % Define theta by step size
-% theta = linspace(-pi/2,pi/2,19); % Define theta by number of steps
+% theta = -pi/2:0.01:pi/2;         % Define theta by step size
+theta = linspace(-pi/2,pi/2,19); % Define theta by number of steps
 thetaDeg = rad2deg(theta);
 
 % Calculate the reduced compliance matrix
@@ -128,8 +127,7 @@ for i = 1:length(theta)
           -m(i).*n(i),  m(i).*n(i),   m(i).^2-n(i).^2]; % Transformation matrix
 
     S1 = T \ (S * T); % Transformed compliance matrix (1/Pa)
-    epsiloni = S1*sigma; % Strain tensor (Pa)
-    epsilon(:, i) = epsiloni; % Strain tensor (Pa)
+    epsilon(:, i) = S1*sigma; % Strain tensor (Pa)
 end
 
 % Calculate the elastic constants
@@ -137,8 +135,8 @@ Ex = E1 ./ (m.^4 + (E1 ./ G12 - 2.*nu12) .* n.^2.*m.^2 + E1./E2 .* n.^4);       
 vxy = nu12 .* (n.^4 + m.^4) - (1 + E1./E2 - E1./G12) .* n.^2.*m.^2;                             % Poisson's ratio nuXY
 vxy = vxy ./ (m.^4 + (E1 ./ G12 - 2.*nu12) .* n.^2.*m.^2 + E1./E2 .* n.^2);                     % Poisson's ratio nuXY
 Ey = E2 ./ (m.^4 + (E2 ./ G12 - 2.*nu21) .* n.^2.*m.^2 + E2./E1 .* n.^4);                       % Transverse modulus Ey (Pa)
-vyx = nu12 .* (n.^4 + m.^4) - (1 + E2/E1 - E2/G12) .* n.^2.*m.^2;                               % Poisson's ratio nuYX
-vyx = vyx ./ (m.^4 + (E2/G12 - 2*nu12) .* n.^2.*m.^2 + (E2./E1).* n.^2);                        % Poisson's ratio nuYX
+vyx = nu21 .* (n.^4 + m.^4) - (1 + E2/E1 - E2/G12) .* n.^2.*m.^2;                               % Poisson's ratio nuYX
+vyx = vyx ./ (m.^4 + (E2/G12 - 2*nu21) .* n.^2.*m.^2 + (E2./E1).* n.^2);                        % Poisson's ratio nuYX
 Gxy = G12 ./ (n.^4 + m.^4 + 2.*((1 + 2.*nu12).*2.*G12 ./ E1 + 2.*G12./E2 - 1) .* n.^2.*m.^2);   % Shear modulus GXY (Pa)
 elasticConstants = [Ex./1E09; vxy; Ey./1E09; vyx; Gxy./1E09];
 elasticConstantsStr = {'Ex', 'vxy', 'Ey', 'vyx', 'Gxy'};
