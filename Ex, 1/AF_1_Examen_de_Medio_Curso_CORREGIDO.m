@@ -218,10 +218,10 @@ clear
 L = 0.5;    % Initial length (m)
 
 % (a) the fibers are aligned along the x-axis.
-thetaA = 0; % Orientation angle 1 (deg)
+% thetaA = 0; % Orientation angle 1 (deg)
 
-thetaDeg = thetaA;  % Orientation angles (deg)
-theta = deg2rad(thetaDeg);            % Orientation angles (rad)
+% thetaDeg = thetaA;  % Orientation angles (deg)
+% theta = deg2rad(thetaDeg);            % Orientation angles (rad)
 
 % Material characteristics
 E1 = 70E09;    % Longitudinal modulus E1 (Pa)
@@ -239,8 +239,8 @@ S = [1/E1     -nu12/E1  0; ...
     -nu12/E1  1/E2      0; ...
     0         0         1/G12]; % Compliance matrix (1/Pa)
 
-m = cos(theta); % Sine of the orientation angle
-n = sin(theta); % Cosine of the orientation angle
+% m = cos(theta); % Sine of the orientation angle
+% n = sin(theta); % Cosine of the orientation angle
 
 Delta1 = 2.329e-3;
 Delta2 = -.291e-3;
@@ -250,13 +250,13 @@ epsilon1=Delta1/L;
 epsilon2=(Delta2*2)/L;
 Gamma12=0;
 epsilon = [epsilon1 epsilon2 Gamma12];
-
-T = [m.^2,   n.^2,   2.*m.*n; 
-     n.^2,   m.^2,  -2.*m.*n; 
-    -m.*n,   m.*n,   m.^2-n.^2]; % Transformation matrix
-
-S1 = T \ (S * T); % Transformed compliance matrix (1/Pa)
-sigma = epsilon / S1;
+% 
+% T = [m.^2,   n.^2,   2.*m.*n; 
+%      n.^2,   m.^2,  -2.*m.*n; 
+%     -m.*n,   m.*n,   m.^2-n.^2]; % Transformation matrix
+% 
+% S1 = T \ (S * T); % Transformed compliance matrix (1/Pa)
+sigma = epsilon / S;
 
 disp('Problem 8')
 disp('Results:');
@@ -323,8 +323,8 @@ deltaY = (epsilon(2, 1) * l + l) * 1e03; % Change in the y dimension (mm)
 
 disp('Problem 9')
 disp('Results:');
-disp(['For Kevlar, assuming: Gm = 1.27Gpa, Em  :']);
+disp('For Kevlar, assuming: Gm = 1.27Gpa, Ef = E2 Vf = 0.55 :');
 disp(['The change in the x dimension of the element is ', num2str(deltaX, '%.4f'), ' mm.']);
 disp(['The change in the y dimension of the element is ', num2str(deltaY, '%.4f'), ' mm.']);
 disp(['The Gamma XY for the element is ', num2str(epsilon(3, 1), '%.4f')]);
-fprintf('\n\n');
+fprintf('\n');
